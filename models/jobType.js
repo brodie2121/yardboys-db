@@ -25,7 +25,7 @@ class JobType {
         }
     }
 
-    static async addNewJob(jobType, instructions) {
+    static async addNewJobType(jobType, instructions) {
         const query = `insert into jobyype
         (jobType, instructions)
     Values ('${jobType}', '${instructions}')`;
@@ -38,7 +38,7 @@ class JobType {
         }
     }
 
-    static async updateJob(jobtypeId, jobType, instructions) {
+    static async updateJobType(jobtypeId, jobType, instructions) {
         const query = `
             UPDATE jobtype
             SET 
