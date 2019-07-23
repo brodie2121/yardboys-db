@@ -1,10 +1,11 @@
 const db = require('./conn.js');
 
 class Employee {
-    constructor(id, FirstName, lastName, phone, email, experience, dateStarted, course_id) {
+    constructor(id, FirstName, lastName, password, phone, email, experience, dateStarted, course_id) {
         this.id = id;
         this.firstName = FirstName;
         this.lastName = lastName; 
+        this.password = password;
         this.phone = phone;
         this.email = email;
         this.experience = experience;
@@ -18,6 +19,31 @@ class Employee {
             return response;
         } catch (err) {
             return err.message;
+        }
+    }
+
+    async save() {
+        try {
+            const response = await db.one(
+                `insert into employee
+                    (firstname, lastname, password, phone, email, experience, datestarted, adminstatus, course_id)
+                values
+                    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                returning id
+                `, [this.firstName, this.lastName, this.password, this.phone, this.email, this.experience, this.dateStarted, this.course_id]);
+            console.log('employee was created with id:', response.id);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    async checkIfCreated() {
+        try {
+            const response = await db.one(`SELECT email FROM employee WHERE email =$1`, [this.email]);
+            return response;
+        } catch(err) {
+            return err.message
         }
     }
 
@@ -39,25 +65,53 @@ class Employee {
         }
     }
 
-    static async addEmployee(firstName, lastName, phone, email, experience, dateStarted, course_id) {
-        const query = `insert into employee
-        (firstName, lastName, phone, email, experience, dateStarted, course_id)
-    Values ('${firstName}', '${lastName}', '${phone}', '${email}', '${experience}', '${dateStarted}', '${course_id}')`;
+    async getUserInfo() {
         try {
-            let response = await db.result(query);
-            return response;
+            const userData = await db.one(`
+            select id, firstname, lastname, password, phone, email, experience, datestarted, adminstatus, course_id
+                from users
+            where id = $1`, 
+            [this.id]);
+            return userData;
         } catch (err) {
-            console.log('Error', err.message);
-            return err;
+            return err.message;
         }
     }
 
-    static async updateEmployee(employeeId, firstName, lastName, phone, email, experience, dateStarted, course_id) {
+    static async checkEmployee(email) {
+        try {
+            const response = db.result(`
+                SELECT *
+                FROM employee 
+                WHERE email = $1
+            `, [email]);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    static async addEmployee(hashPW) {
+        try {
+            const response = await db.result(`
+                INSERT INTO employee
+                    (FirstName, lastName, password, phone, email, experience, dateStarted, course_id)
+                VALUES
+                    ($1, $2, $3, $4, $5, $6, $6, $7, $8)`,
+                [this.firstName, this.lastName, hashPW, this.phone, this.email, this.experience, this.dateStarted, this.course_id]);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    static async updateEmployee(employeeId, firstName, password, lastName, phone, email, experience, dateStarted, course_id) {
         const query = `
             UPDATE employee 
             SET 
                 firstname = '${firstName}', 
                 lastname = '${lastName}', 
+                password = '${password},
                 phone = '${phone}', 
                 email = '${email}', 
                 experience = '${experience}', 
