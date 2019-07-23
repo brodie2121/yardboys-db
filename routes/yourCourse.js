@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const YourCourseModel = require ('../models/yourcourse');
+const YourCourseModel = require ('../models/yourCourse');
 
 router.get('/home', (req, res, next) => {
     res.send("Welcome to my API").status(200);
 });
-
 
 router.get("/jobs/:job_id?", async (req, res, next) => {
     const yourcourseId = req.params.job_id;

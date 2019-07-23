@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require('bcryptjs'); 
-const SALT_ROUNDS = 10,
-const EmployeeModel = require("../models/employee");
+const express = require("express"),
+    router = express.Router(),
+    bcrypt = require('bcryptjs'), 
+    SALT_ROUNDS = 10,
+    EmployeeModel = require("../models/employee");
 
 /* GET home page. */
 router.get("/", (req, res, next) => {

@@ -15,8 +15,8 @@ router.get("/all", async (req, res, next) => {
 
 //get jobs by date
 router.get('/jobs/${date}', async (req, res, next) => {
-    const date = req.params.posting_date;
-    const date = await DailyJobBoardModel.getJobByDate(date);
+    const dateId = req.params.posting_date;
+    const date = await JobBoardModel.getJobByDate(dateId);
     res.json(date).status(200);
 });
 
