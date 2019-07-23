@@ -42,6 +42,6 @@ create table jobboard(
 create table jobtype(
     id serial primary key,
     jobtype VARCHAR(200),
-    instructions VARCHAR(200),
+    instructions VARCHAR(200)
 );
 
