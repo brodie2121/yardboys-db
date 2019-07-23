@@ -28,7 +28,8 @@ create table yourclub(
     clubname VARCHAR(200),
     admin VARCHAR(100),
     employees VARCHAR(200),
-    citystate VARCHAR(200)
+    city VARCHAR(200),
+state VARCHAR(200)
 );
 
 create table jobboard(
