@@ -41,8 +41,8 @@ router.get("/delete/:jobboard_id?", async (req, res, next) => {
 
 //create new jobboard
 router.post("/post/add", async (req,res) => {
-    const { date, jobType, employee_id, comments } = req.body;
-    const response = await JobBoardModel.addNewJobBoard(date, jobType, employee_id, comments);
+    const { date, jobType_id, employee_id, comments } = req.body;
+    const response = await JobBoardModel.addNewJobBoard(date, jobType_id, employee_id, comments);
     (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobboard ${jobboard_id}`).status(409);
 });
 
@@ -50,8 +50,8 @@ router.post("/post/add", async (req,res) => {
 router.put("/jobs/update/:jobboard_id?", async (req, res) => {
     const jobboardId = req.params.jobboard_id;
     console.log(req.body);
-    const { date, jobType, employee_id, comments } = req.body;
-    const response = await JobBoardModel.updateJobBoard(date, jobType, employee_id, comments);
+    const { date, jobType_id, employee_id, comments } = req.body;
+    const response = await JobBoardModel.updateJobBoard(date, jobType_id, employee_id, comments);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);

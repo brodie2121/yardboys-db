@@ -4,8 +4,8 @@ class JobBoard{
     constructor(id, date, jobType, employee_id, comments) {
         this.id = id;
         this.date = date;
-        this.jobType = jobType;
-        this.employee = employee_id;
+        this.jobType_id = jobType_id;
+        this.employee_id = employee_id;
         this.comments = comments;
     }
 
@@ -41,10 +41,10 @@ class JobBoard{
     }
 
     //add jobs
-    static async addNewJobBoard(date, jobType, employee_id, comments) {
+    static async addNewJobBoard(date, jobType_id, employee_id, comments) {
         const query = `insert into jobboard
-        (date, jobType, employee, comments)
-    Values ('${date}', '${jobType}', '${employee_id}', '${comments}')`;
+        (date, jobType_id, employee, comments)
+    Values ('${date}', '${jobType_id}', '${employee_id}', '${comments}')`;
         try {
             let response = await db.result(query);
             return response;
@@ -54,12 +54,12 @@ class JobBoard{
         }
     }
 
-    static async updateJobBoard(jobboardId, date, jobType, employee_id, comments) {
+    static async updateJobBoard(jobboardId, date, jobType_id, employee_id, comments) {
         const query = `
             UPDATE jobboard 
             SET 
                 date = '${date}', 
-                jobtype = '${jobType}', 
+                jobtype = '${jobType_id}', 
                 employee_id = '${employee_id}', 
                 comments = '${comments}', 
             WHERE 
