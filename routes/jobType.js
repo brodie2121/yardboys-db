@@ -13,6 +13,12 @@ router.get("/all", async (req, res, next) => {
     res.json(allJobTypes).status(200);
 });
 
+router.get("/jobtypes/:jobtype_id?", async (req, res) => {
+    const jobtypeId = req.params.jobtype_id;
+    const theJobtype = await JobTypeModel.getById(jobtypeId);
+    res.json(theJobtype).status(200);
+});
+
 //delete job
 router.get("/delete/:jobtype_id?", async (req, res, next) => {
     const jobtypeId = req.params.job_id;
@@ -29,11 +35,11 @@ router.get("/delete/:jobtype_id?", async (req, res, next) => {
 router.post("/post/add", async (req,res) => {
     const { jobType, instructions } = req.body;
     const response = await JobTypeModel.addNewJobType(jobType, instructions);
-    (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobtype ${jobtype_id}`).status(409);
+    (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobtype ${jobtypeId}`).status(409);
 });
 
 //update jobboard
-router.put("/jobs/update/:jobtype_id?", async (req, res) => {
+router.put("/jobtypes/update/:jobtype_id?", async (req, res) => {
     const jobtypeId = req.params.jobtype_id;
     console.log(req.body);
     const { jobType, instructions } = req.body;

@@ -36,12 +36,9 @@ router.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
     const checkEmail = await EmployeeModel.checkEmployee(email);
 
-    //Error Codes for login:
-    //1: Not found
-    //2: Wrong Password or Username
 
     if (checkEmail.rowCount === 1) {
-        let user = checkEmail.rows[0];
+        let employee = checkEmail.rows[0];
         const comparePassword = await bcrypt.compare(password, employee.password);
 
         if (!!comparePassword) {
@@ -50,29 +47,24 @@ router.post("/login", async (req, res, next) => {
             res.json(employee);
         } else {
             res.json({
-            // Wrong Password
+            // incorrect Password
                 login: false,
                 errorCode: 2
             });
         }
     } else {
         res.json({
-        // Not Found
+        // not existant 
         login: false,
         errorCode: 1
     });
     }
 });
 
-router.post("/register", async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
     const { FirstName, lastName, password, phone, email, experience, dateStarted, course_id } = req.body;
     const userInstance = new EmployeeModel(null, FirstName, lastName, null, phone, email, experience, dateStarted, course_id);
     const checkEmail = await EmployeeModel.checkEmployee(email);
-
-    //Error Codes for Register:
-    //3: User already created
-    //4: Database write error
-    //5: Success
 
     if (checkEmail.rowCount === 0) {
         const hashPassword = await bcrypt.hash(password, SALT_ROUNDS);
@@ -81,15 +73,13 @@ router.post("/register", async (req, res, next) => {
         (createEmployee.rowCount === 1) ?
             res.json({
                 createdAccount: true,
+                //success
                 errorCode: 5
             })
             :
             res.json({
+                //database error
                 errorCode: 4
-            });
-    } else {
-        res.json({
-            errorCode: 3
         });
     }
 });

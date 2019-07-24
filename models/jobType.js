@@ -16,6 +16,15 @@ class JobType {
         }
     }
 
+    static async getById(jobtype_id) {
+        try {
+            const response = await db.one(`select * from jobtype where id = ${jobtype_id}`);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
     static async deleteJob(jobtype_id) {
         try {
             const response = await db.result(`delete from jobtype where id = ${jobtype_id}`);
@@ -26,7 +35,7 @@ class JobType {
     }
 
     static async addNewJobType(jobType, instructions) {
-        const query = `insert into jobyype
+        const query = `insert into jobtype
         (jobType, instructions)
     Values ('${jobType}', '${instructions}')`;
         try {
