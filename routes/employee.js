@@ -61,28 +61,29 @@ router.post("/login", async (req, res, next) => {
     }
 });
 
-router.post("/signup", async (req, res, next) => {
-    const { FirstName, lastName, password, phone, email, experience, dateStarted, course_id } = req.body;
-    const userInstance = new EmployeeModel(null, FirstName, lastName, null, phone, email, experience, dateStarted, course_id);
-    const checkEmail = await EmployeeModel.checkEmployee(email);
+router.post('/register', async (req,res) => {
 
-    if (checkEmail.rowCount === 0) {
-        const hashPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        const createEmployee = await userInstance.addEmployee(hashPassword);
+    const firstName = req.body.firstName
+    const  password = req.body.password
+    
+    const employee = await db.oneOrNone('SELECT employeeid FROM employee WHERE email = $1',[email])
 
-        (createEmployee.rowCount === 1) ?
-            res.json({
-                createdAccount: true,
-                //success
-                errorCode: 5
+        if(employee) {
+        res.render('register',{message: "User name already exists!"})
+        } else {
+          // insert user into the users table
+
+        bcryptjs.hash(password,SALT_ROUNDS,function(error, hash){
+
+            if(error == null) {
+                db.none('INSERT INTO users(username,password) VALUES($1,$2)',[username,hash])
+                .then(() => {
+                    res.send('SUCCESS')
+                    })
+                }
             })
-            :
-            res.json({
-                //database error
-                errorCode: 4
-        });
-    }
-});
+        }
+    })  
 
 router.put("/employees/update/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;

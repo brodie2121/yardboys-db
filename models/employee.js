@@ -91,7 +91,7 @@ class Employee {
         }
     }
 
-    static async signupEmployee(hashPW) {
+    static async registerEmployee(hashPW) {
         try {
             const response = await db.result(`
                 INSERT INTO employee
