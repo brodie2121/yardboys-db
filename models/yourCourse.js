@@ -10,9 +10,40 @@ class YourCourse {
         this.state = state;
     }
 
-    static async getById(yourcourse_id) {
+    static async getAll() {
         try {
-            const response = await db.one(`select * from yourcourse where id = ${yourcourse_id}`);
+            const response = await db.any(`select * from yourcourse;`);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    static async getById(course_id) {
+        try {
+            const response = await db.one(`select * from yourcourse where id = ${course_id}`);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
+    static async updateCourse(courseId, clubName, admin, employees, city, state) {
+        const query = `
+            UPDATE employee 
+            SET 
+                clubname = '${clubName}', 
+                admin = '${admin}', 
+                employees = '${employees}', 
+                city = '${city}', 
+                state = '${state}',
+
+            WHERE 
+                id = '${courseId}'`;
+        console.log(query);
+        try {
+            const response = await db.result(query);
+            console.log("response", response);
             return response;
         } catch (err) {
             return err.message;

@@ -1,4 +1,5 @@
 const express = require('express');
+    session = require('express-session'),
     path = require('path');
     cookieParser = require('cookie-parser');
     logger = require('morgan');
@@ -29,6 +30,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions));
+//app.use(session({
+    //store: new FileStore(),
+    //secret: 'get rad',
+    //resave: false,
+    //saveUninitialized: true,
+    //is_logged_in: false
+//}));
 
 app.use('/jobboard', JobBoardRouter);
 app.use('/employee', employeeRouter);

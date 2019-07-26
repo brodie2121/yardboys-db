@@ -19,6 +19,15 @@ class JobBoard{
         }
     }
 
+    static async getJobById(jobboard_id) {
+        try {
+            const response = await db.one(`select * from jobboard where id = ${jobboard_id}`);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
     //delete job
     static async deleteJob(jobboard_id) {
         try {
