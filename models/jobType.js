@@ -47,7 +47,7 @@ class JobType {
         }
     }
 
-    static async updateJobType(jobtypeId, jobType, instructions) {
+    static async updateJobType(jobType, instructions, jobtypeId) {
         const query = `
             UPDATE jobtype
             SET 

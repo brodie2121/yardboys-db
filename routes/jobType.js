@@ -21,7 +21,7 @@ router.get("/jobtypes/:jobtype_id?", async (req, res) => {
 
 //delete job
 router.get("/delete/:jobtype_id?", async (req, res, next) => {
-    const jobtypeId = req.params.job_id;
+    const jobtypeId = req.params.jobtype_id;
     const response = await JobTypeModel.deleteJob(jobtypeId);
     console.log("response", response)
     if (response.command === "DELETE" && response.rowCount >= 1) {
@@ -38,12 +38,12 @@ router.post("/post/add", async (req,res) => {
     (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobtype ${jobtypeId}`).status(409);
 });
 
-//update jobboard
+//update jobtype
 router.put("/jobtypes/update/:jobtype_id?", async (req, res) => {
     const jobtypeId = req.params.jobtype_id;
     console.log(req.body);
     const { jobType, instructions } = req.body;
-    const response = await JobTypeModel.updateJobType(jobType, instructions);
+    const response = await JobTypeModel.updateJobType(jobType, instructions, jobtypeId);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
