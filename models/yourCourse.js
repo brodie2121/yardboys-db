@@ -28,18 +28,27 @@ class YourCourse {
         }
     }
 
+    static async deleteCourse(course_id) {
+        try {
+            const response = await db.result(`delete from yourcourse where id = ${course_id}`);
+            return response;
+        } catch (err) {
+            return err.message;
+        }
+    }
+
     static async updateCourse(courseId, clubName, admin, employees, city, state) {
         const query = `
-            UPDATE employee 
+            UPDATE yourcourse
             SET 
                 clubname = '${clubName}', 
                 admin = '${admin}', 
                 employees = '${employees}', 
                 city = '${city}', 
-                state = '${state}',
+                state = '${state}'
 
             WHERE 
-                id = '${courseId}'`;
+                id = ${courseId}`;
         console.log(query);
         try {
             const response = await db.result(query);

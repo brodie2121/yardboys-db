@@ -18,16 +18,27 @@ router.get("/courses/:course_id?", async (req, res, next) => {
     res.json(yourcourse).status(200);
 });
 
-router.put("/course/update/:yourcourse_id?", async (req, res) => {
-    const yourcourseId = req.params.yourcourse_id;
+router.get("/delete/:course_id?", async (req, res, next) => {
+    const courseId = req.params.course_id;
+    const response = await YourCourseModel.deleteCourse(courseId);
+    console.log("response", response)
+    if (response.command === "DELETE" && response.rowCount >= 1) {
+        res.sendStatus(200);
+    } else {
+        res.send(`Could not delete courseId: ${courseId}`).status(409);
+    }
+});
+
+router.put("/courses/update/:course_id?", async (req, res) => {
+    const courseId = req.params.course_id;
     console.log(req.body);
     const { clubName, admin, employees, city, state } = req.body;
-    const response = await YourCourseModel.updateCourse( yourcourseId, clubName, admin, employees, city, state );
+    const response = await YourCourseModel.updateCourse( courseId, clubName, admin, employees, city, state );
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
     } else {
-        res.send(`Could not update yourcourse id ${yourcourseId}`).status(409);
+        res.send(`Could not update course id ${courseId}`).status(409);
     } 
 });
 
