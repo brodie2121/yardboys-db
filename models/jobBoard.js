@@ -1,7 +1,7 @@
 const db = require('./conn.js');
 
 class JobBoard{
-    constructor(id, date, jobType, employee_id, comments) {
+    constructor(id, date, jobType_id, employee_id, comments) {
         this.id = id;
         this.date = date;
         this.jobType_id = jobType_id;
@@ -62,17 +62,17 @@ class JobBoard{
             return err;
         }
     }
-
-    static async updateJobBoard(jobboardId, date, jobType_id, employee_id, comments) {
+ 
+    static async updateJobBoard( date, jobType, employee, comments, jobboardId ) {
         const query = `
             UPDATE jobboard 
             SET 
                 date = '${date}', 
-                jobtype = '${jobType_id}', 
-                employee_id = '${employee_id}', 
-                comments = '${comments}', 
+                jobtype = ${jobType}, 
+                employee = ${employee}, 
+                comments = '${comments}'
             WHERE 
-                id = '${jobboardId}'`;
+                id = ${jobboardId}`;
         console.log(query);
         try {
             const response = await db.result(query);

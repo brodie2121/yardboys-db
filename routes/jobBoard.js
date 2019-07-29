@@ -51,8 +51,8 @@ router.post("/post/add", async (req,res) => {
 router.put("/jobs/update/:jobboard_id?", async (req, res) => {
     const jobboardId = req.params.jobboard_id;
     console.log(req.body);
-    const { date, jobType_id, employee_id, comments } = req.body;
-    const response = await JobBoardModel.updateJobBoard(date, jobType_id, employee_id, comments);
+    const { date, jobType, employee, comments } = req.body;
+    const response = await JobBoardModel.updateJobBoard(date, jobType, employee, comments, jobboardId);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
