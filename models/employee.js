@@ -2,15 +2,16 @@ const db = require('./conn.js');
 const bcrypt = require('bcryptjs');
 
 class Employee {
-    constructor(id, FirstName, lastName, password, phone, email, experience, dateStarted, course_id) {
+    constructor(id, FirstName, lastName, password, phone, email, experience, dateStarted, adminStatus, course_id) {
         this.id = id;
         this.firstName = FirstName;
         this.lastName = lastName;
-        this.password = password;
         this.phone = phone;
         this.email = email;
+        this.password = password;
         this.experience = experience;
         this.dateStarted = dateStarted;
+        this.adminStatus = adminStatus;
         this.course_id = course_id;
     }
 
@@ -27,11 +28,11 @@ class Employee {
         try {
             const response = await db.one(
                 `insert into employee
-                    (firstname, lastname, email, phone, password, experience, datestarted, adminstatus, course_id)
+                    (firstname, lastname, phone, email, password, experience, datestarted, adminstatus, course_id)
                 values
                     ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 returning id
-                `, [this.firstName, this.lastName, this.email, this.phone, this.password, this.experience, this.dateStarted, this.course_id]);
+                `, [this.firstName, this.lastName, this.phone, this.email, this.password, this.experience, this.dateStarted, this.course_id]);
             console.log('employee was created with id:', response.id);
             return response;
         } catch (err) {
@@ -69,13 +70,28 @@ class Employee {
     async getUserInfo() {
         try {
             const userData = await db.one(`
-            select id, firstname, lastname, email, phone, password, experience, datestarted, adminstatus, course_id
+            select id, firstname, lastname, phone, email, password, experience, datestarted, adminstatus, course_id
                 from users
             where id = $1`, 
             [this.id]);
             return userData;
         } catch (err) {
             return err.message;
+        }
+    }
+
+    async getEmployeeByEmail() {
+        try {
+            const employeeData = await db.one(
+            `
+                select id, firstname, lastname, phone, password, experience, datestarted, adminstatus, course_id
+                    from employee
+                where email = $1`,
+            [this.email]
+        );
+        return employeeData;
+    } catch (err) {
+        return err.message;
         }
     }
 
@@ -101,11 +117,12 @@ class Employee {
             SET 
                 firstname = '${firstName}', 
                 lastname = '${lastName}', 
-                email = '${email}', 
                 phone = '${phone}', 
+                email = '${email}', 
                 password = '${password}',
                 experience = '${experience}', 
                 datestarted = '${dateStarted}',
+                adminstatus = '${adminStatus}',
                 course_id = '${course_id}'
 
             WHERE 
