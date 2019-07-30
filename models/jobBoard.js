@@ -40,9 +40,9 @@ class JobBoard{
 
 
     //get jobs by date
-    static async getJobBoardByDate(date) {
+    static async getByDate(date) {
         try {
-            const response = await db.one(`select * from jobboard order by date where date = ${date}`);
+            const response = await db.result(`select * from jobboard order by date where date = ${date}`);
             return response;
         } catch (err) {
             return err.message;
