@@ -1,8 +1,9 @@
 const express = require("express"),
     router = express.Router(),
-    bcrypt = require('bcryptjs'), 
+    bcryptjs = require('bcryptjs'), 
     SALT_ROUNDS = 10,
     EmployeeModel = require("../models/employee");
+    db = require("../models/conn.js");
 
 /* GET home page. */
 router.get("/", (req, res, next) => {
@@ -32,58 +33,69 @@ router.get("/delete/:employee_id?", async (req, res, next) => {
     }
 });
 
-router.post("/login", async (req, res, next) => {
-    const { email, password } = req.body;
-    const checkEmail = await EmployeeModel.checkEmployee(email);
+router.get('/login', (req, res) => {
+    console.log('login');
+})
 
+router.post('/login', async (req,res) => {
 
-    if (checkEmail.rowCount === 1) {
-        let employee = checkEmail.rows[0];
-        const comparePassword = await bcrypt.compare(password, employee.password);
+    let email = req.body.email
+    let password = req.body.password
 
-        if (!!comparePassword) {
-            theEmployee["login"] = true;
-            delete employee.password;
-            res.json(employee);
+    let employee = await db.oneOrNone('SELECT id ,email, password FROM employee WHERE email = $1', [email])
+      if(employee) { //check for user's password
+
+    bcryptjs.compare(password,employee.password,function(error,result){
+        if(result) {
+
+        // put username and userId in the session
+            if(req.session) {
+                req.session.employee = {employeeId: employee.id, email: employee.email}
+            }
+
         } else {
-            res.json({
-            // incorrect Password
-                login: false,
-                errorCode: 2
-            });
+            res.render('login',{message: "Invalid username or password!"})
         }
-    } else {
-        res.json({
-        // not created 
-        login: false,
-        errorCode: 1
-    });
-    }
-});
+    })
 
-router.post("/register", async (req, res, next) => {
-    console.log("req.body");
-    const { FirstName, lastName, password, phone, email, experience, dateStarted, course_id } = req.body;
-    const userInstance = new EmployeeModel(null, FirstName, lastName, null, phone, email, experience, dateStarted, course_id);
-    const checkEmail = await EmployeeModel.checkEmployee(email);
+        }   else { // user does not exist
+        res.render('login',{message: "Invalid username or password!"})
+        }
+    })
 
-    if (checkEmail.rowCount === 0) {
-        const hashPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        const createEmployee = await userInstance.addEmployee(hashPassword);
+router.get('/register', (req,res) => {
+    console.log('register');
+})
 
-        (createEmployee.rowCount === 1) ?
-            res.json({
-                createdAccount: true,
-                //success
-                errorCode: 5
+router.post('/register', async (req,res) => {
+
+    const firstName = req.body.firstName
+    const lastName = req.body.lastName
+    const password = req.body.password
+    const phone = req.body.phone
+    const email = req.body.email
+    const experience = req.body.experience
+    const dateStarted = req.body.dateStarted
+    const course_id = req.body.course_id
+    
+    let employee = await db.oneOrNone('SELECT id FROM employee WHERE email = $1',[email])
+
+        if(employee) {
+        res.render('register',{message: "employee email already exists!"})
+        } else {
+          // insert user into the users table
+
+        bcryptjs.hash(password,SALT_ROUNDS,function(error, hash){
+
+            if(error == null) {
+                db.none('INSERT INTO employee(firstname, lastname ,password, phone,email, experience, datestarted, course_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[firstName,lastName,hash,phone,email,experience,dateStarted,course_id])
+                .then(() => {
+                    res.send('SUCCESS')
+                    })
+                }
             })
-            :
-            res.json({
-                //database error
-                errorCode: 4
-        });
-    }
-});
+        }
+    })  
 
 router.put("/employees/update/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;

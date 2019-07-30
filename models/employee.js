@@ -1,10 +1,11 @@
 const db = require('./conn.js');
+const bcrypt = require('bcryptjs');
 
 class Employee {
     constructor(id, FirstName, lastName, password, phone, email, experience, dateStarted, course_id) {
         this.id = id;
         this.firstName = FirstName;
-        this.lastName = lastName; 
+        this.lastName = lastName;
         this.password = password;
         this.phone = phone;
         this.email = email;
@@ -26,11 +27,11 @@ class Employee {
         try {
             const response = await db.one(
                 `insert into employee
-                    (firstname, lastname, password, phone, email, experience, datestarted, adminstatus, course_id)
+                    (firstname, lastname, email, phone, password, experience, datestarted, adminstatus, course_id)
                 values
                     ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 returning id
-                `, [this.firstName, this.lastName, this.password, this.phone, this.email, this.experience, this.dateStarted, this.course_id]);
+                `, [this.firstName, this.lastName, this.email, this.phone, this.password, this.experience, this.dateStarted, this.course_id]);
             console.log('employee was created with id:', response.id);
             return response;
         } catch (err) {
@@ -68,7 +69,7 @@ class Employee {
     async getUserInfo() {
         try {
             const userData = await db.one(`
-            select id, firstname, lastname, password, phone, email, experience, datestarted, adminstatus, course_id
+            select id, firstname, lastname, email, phone, password, experience, datestarted, adminstatus, course_id
                 from users
             where id = $1`, 
             [this.id]);
@@ -91,19 +92,8 @@ class Employee {
         }
     }
 
-    static async registerEmployee(hashPW) {
-        try {
-            const response = await db.result(`
-                INSERT INTO employee
-                    (FirstName, lastName, password, phone, email, experience, dateStarted, course_id)
-                VALUES
-                    ($1, $2, $3, $4, $5, $6, $6, $7, $8)`,
-                [this.firstName, this.lastName, hashPW, this.phone, this.email, this.experience, this.dateStarted, this.course_id]);
-            return response;
-        } catch (err) {
-            return err.message;
-        }
-    }
+
+    
 
     static async updateEmployee(employeeId, firstName, lastName, phone, email, password, experience, dateStarted, course_id) {
         const query = `
@@ -111,8 +101,8 @@ class Employee {
             SET 
                 firstname = '${firstName}', 
                 lastname = '${lastName}', 
-                phone = '${phone}', 
                 email = '${email}', 
+                phone = '${phone}', 
                 password = '${password}',
                 experience = '${experience}', 
                 datestarted = '${dateStarted}',
