@@ -62,6 +62,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.post("/register", async (req, res, next) => {
+    console.log("req.body");
     const { FirstName, lastName, password, phone, email, experience, dateStarted, course_id } = req.body;
     const userInstance = new EmployeeModel(null, FirstName, lastName, null, phone, email, experience, dateStarted, course_id);
     const checkEmail = await EmployeeModel.checkEmployee(email);
