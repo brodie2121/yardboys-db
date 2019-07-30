@@ -1,7 +1,6 @@
 const express = require("express"),
     router = express.Router(),
-    bcryptjs = require('bcryptjs'), 
-    SALT_ROUNDS = 10,
+    bcryptjs = require('bcryptjs'),
     Employee = require("../models/employee");
     db = require("../models/conn.js");
 
