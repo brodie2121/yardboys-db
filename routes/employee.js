@@ -40,21 +40,21 @@ router.get("/delete/:employee_id?", async (req, res, next) => {
 router.post("/login", async (req, res) => {
     console.log("this is req body", req.body);
     const { email, password } = req.body,
-        employeeInstance = new Employee(null, null, null, email, password, null, null, null, null);
+        employeeInstance = new Employee(null, null, null, null, email, password, null, null, null, null);
     const employeeData = await employeeInstance.getEmployeeByEmail();
     console.log("this is employee data: ", employeeData);
 
     const isValid = bcryptjs.compareSync(password, employeeData.password);
-    console.log("this is user data after compare sync: ", employeeData);
+    console.log("this is employee data after compare sync: ", employeeData);
     if (!!isValid) {
         req.session.is_logged_in = true;
-        req.session.firstName = employeeData.firstname;
-        req.session.lastName = employeeData.lastname;
+        req.session.firstname = employeeData.firstname;
+        req.session.lastname = employeeData.lastname;
         req.session.phone = employeeData.phone;
         req.session.employee_id = employeeData.employee_id;
         employeeData["login"] = true;
         console.log("CORRECT PW!");
-        res.json(employeeData);
+        // res.json(employeeData);
         res.sendStatus(200);
     } else {
         console.log("WRONG PW!");
@@ -64,32 +64,32 @@ router.post("/login", async (req, res) => {
 
     router.post("/register", async (req, res) => {
         console.log("this is req body", req.body);
-        const { firstName, lastName, phone, email, password, experience, dateStarted, adminStatus, course_id } = req.body;
+        const { firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password } = req.body;
 
         const salt = bcryptjs.genSaltSync(10);
         const hash = bcryptjs.hashSync(password, salt);
 
         const employeeInstance = new Employee(
             null,
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             phone,
             email,
-            hash,
             experience,
-            dateStarted,
-            adminStatus,
+            datestarted,
+            adminstatus,
             course_id,
+            hash,
 
         );
         employeeInstance.save().then(response => {
-            req.session.firstName = response.firstname;
-            req.session.lastName = response.lastname;
+            req.session.firstname = response.firstname;
+            req.session.lastname = response.lastname;
             req.session.phone = response.phone;
             req.session.email = response.email;
             req.session.experience = response.experience;
-            req.session.dateStarted = response.datestarted;
-            req.session.adminStatus = response.adminstatus;
+            req.session.datestarted = response.datestarted;
+            req.session.adminstatus = response.adminstatus;
             req.session.course_id = response.course_id;
             res.sendStatus(200);
         });
@@ -98,8 +98,8 @@ router.post("/login", async (req, res) => {
 router.put("/employees/update/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;
     console.log(req.body);
-    const { firstName, lastName, phone, email, password, experience, dateStarted, course_id } = req.body;
-    const response = await EmployeeModel.updateEmployee(employeeId, firstName, lastName, phone, email, password, experience, dateStarted, adminStatus, course_id);
+    const { firstName, lastName, phone, email, experience, dateStarted, course_id, password } = req.body;
+    const response = await EmployeeModel.updateEmployee(employeeId, firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
