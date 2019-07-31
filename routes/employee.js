@@ -16,13 +16,13 @@ router.get("logout", async (req, res) => {
 
 //get all employees
 router.get("/all", async (req, res, next) => {
-    const allEmployees = await EmployeeModel.getAll();
+    const allEmployees = await Employee.getAll();
     res.json(allEmployees).status(200);
 });
 
 router.get("/employees/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;
-    const theEmployee = await EmployeeModel.getById(employeeId);
+    const theEmployee = await Employee.getById(employeeId);
     res.json(theEmployee).status(200);
 });
 
@@ -98,7 +98,7 @@ router.post("/login", async (req, res) => {
 router.put("/employees/update/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;
     console.log(req.body);
-    const { firstName, lastName, phone, email, experience, dateStarted, course_id, password } = req.body;
+    const { firstname, lastname, phone, email, experience, dateStarted, course_id, password } = req.body;
     const response = await EmployeeModel.updateEmployee(employeeId, firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
