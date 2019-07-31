@@ -13,19 +13,19 @@ router.get("/all", async (req, res, next) => {
     res.json(allJobs).status(200);
 });
 
-//get jobs by date
-router.get('/jobs/${date}', async (req, res, next) => {
-    const date = req.params.date;
-    const thedate = await JobBoardModel.getByDate(date);
-    res.json(thedate).status(200);
-});
-
-
 router.get("/jobs/:jobboard_id?", async (req, res, next) => {
     console.log('req.params', req.params);
     const jobboardId = req.params.jobboard_id;
     const theJob = await JobBoardModel.getJobById(jobboardId);
     res.json(theJob).status(200);
+});
+
+
+//get jobs by date
+router.get('/jobs/date/:date?', async (req, res, next) => {
+    const date = req.params.date;
+    const thedate = await JobBoardModel.getByDate(date);
+    res.json(thedate).status(200);
 });
 
 //delete job
@@ -42,17 +42,17 @@ router.get("/delete/:jobboard_id?", async (req, res, next) => {
 
 //create new jobboard
 router.post("/post/add", async (req,res) => {
-    const { date, jobType_id, employee_id, comments } = req.body;
-    const response = await JobBoardModel.addNewJobBoard(date, jobType_id, employee_id, comments);
-    (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobboard ${jobboard_id}`).status(409);
+    const { date, jobtype, employee, comments, jobboardId } = req.body;
+    const response = await JobBoardModel.addNewJobBoard(date, jobtype, employee, comments, jobboardId);
+    (response.command === "INSERT" && response.rowCount >= 1) ? res.sendStatus(200) : res.send(`Could not add new jobboardId ${jobboardId}`).status(409);
 });
 
 //update jobboard
 router.put("/jobs/update/:jobboard_id?", async (req, res) => {
     const jobboardId = req.params.jobboard_id;
     console.log(req.body);
-    const { date, jobType, employee, comments } = req.body;
-    const response = await JobBoardModel.updateJobBoard(date, jobType, employee, comments, jobboardId);
+    const { date, jobtype, employee, comments } = req.body;
+    const response = await JobBoardModel.updateJobBoard(date, jobtype, employee, comments, jobboardId);
     console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);

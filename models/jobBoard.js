@@ -1,11 +1,11 @@
 const db = require('./conn.js');
 
 class JobBoard{
-    constructor(id, date, jobType_id, employee_id, comments) {
+    constructor(id, date, jobtype, employee, comments) {
         this.id = id;
         this.date = date;
-        this.jobType_id = jobType_id;
-        this.employee_id = employee_id;
+        this.jobtype = jobtype;
+        this.employee = employee;
         this.comments = comments;
     }
 
@@ -42,7 +42,7 @@ class JobBoard{
     //get jobs by date
     static async getByDate(date) {
         try {
-            const response = await db.result(`select * from jobboard order by date where date = ${date}`);
+            const response = await db.result(`select * from jobboard where date = '${date}'`);
             return response;
         } catch (err) {
             return err.message;
@@ -50,10 +50,10 @@ class JobBoard{
     }
 
     //add jobs
-    static async addNewJobBoard(date, jobType_id, employee_id, comments) {
+    static async addNewJobBoard(date, jobtype, employee, comments) {
         const query = `insert into jobboard
-        (date, jobType_id, employee, comments)
-    Values ('${date}', '${jobType_id}', '${employee_id}', '${comments}')`;
+        (date, jobtype, employee, comments)
+    Values ('${date}', '${jobtype}', '${employee}', '${comments}')`;
         try {
             let response = await db.result(query);
             return response;
@@ -63,12 +63,12 @@ class JobBoard{
         }
     }
  
-    static async updateJobBoard( date, jobType, employee, comments, jobboardId ) {
+    static async updateJobBoard( date, jobtype, employee, comments, jobboardId ) {
         const query = `
             UPDATE jobboard 
             SET 
                 date = '${date}', 
-                jobtype = ${jobType}, 
+                jobtype = ${jobtype}, 
                 employee = ${employee}, 
                 comments = '${comments}'
             WHERE 
