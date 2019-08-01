@@ -12,7 +12,7 @@ class JobBoard{
     //getall
     static async getAll() {
         try {
-            const response = await db.any(`select * from jobboard;`);
+            const response = await db.any(`select * from jobboard order by date asc;`);
             return response;
         } catch (err) {
             return err.message;
