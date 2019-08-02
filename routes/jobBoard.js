@@ -14,12 +14,10 @@ router.get("/all", async (req, res, next) => {
 });
 
 router.get("/jobs/:jobboard_id?", async (req, res, next) => {
-    console.log('req.params', req.params);
     const jobboardId = req.params.jobboard_id;
     const theJob = await JobBoardModel.getJobById(jobboardId);
     res.json(theJob).status(200);
 });
-
 
 //get jobs by date
 router.get('/jobs/date/:date?', async (req, res, next) => {

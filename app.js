@@ -5,6 +5,7 @@ const express = require('express');
     cookieParser = require('cookie-parser');
     logger = require('morgan');
     cors = require('cors');
+    bcryptjs = require('bcryptjs');
 
 const indexRouter = require('./routes/index');
     usersRouter = require('./routes/users');
