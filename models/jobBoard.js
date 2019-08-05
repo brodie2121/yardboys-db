@@ -12,7 +12,7 @@ class JobBoard{
     //getall
     static async getAll() {
         try {
-            const response = await db.any(`select employee.firstname, jobboard.employee, jobboard.jobtype, jobboard.comments, jobboard.date, jobboard.id from employee inner join jobboard on employee.id = jobboard.employee;`);
+            const response = await db.any(`select employee.fullname, jobboard.employee, jobboard.jobtype, jobboard.comments, jobboard.date, jobboard.id from employee inner join jobboard on employee.id = jobboard.employee;`);
             return response;
         } catch (err) {
             return err.message;
@@ -21,7 +21,7 @@ class JobBoard{
 
     static async getJobById(jobboard_id) {
         try {
-            const response = await db.one(`select employee.firstname, jobboard.employee, jobboard.jobtype, jobboard.comments, jobboard.date, jobboard.id 
+            const response = await db.one(`select employee.fullname, jobboard.employee, jobboard.jobtype, jobboard.comments, jobboard.date, jobboard.id 
             from jobboard inner join employee on employee.id = jobboard.employee where jobboard.id  = ${jobboard_id}` );
             return response;
         } catch (err) {

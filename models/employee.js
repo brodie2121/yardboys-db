@@ -2,10 +2,9 @@ const db = require('./conn.js');
 const bcrypt = require('bcryptjs');
 
 class Employee {
-    constructor(id, firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password) {
+    constructor(id, fullname, phone, email, experience, datestarted, adminstatus, course_id, password) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.fullname = fullname;
         this.phone = phone;
         this.email = email;
         this.experience = experience;
@@ -28,11 +27,11 @@ class Employee {
         try {
             const response = await db.one(
                 `insert into employee
-                    (firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password)
+                    (fullname, phone, email, experience, datestarted, adminstatus, course_id, password)
                 values
-                    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                    ($1, $2, $3, $4, $5, $6, $7, $8)
                 returning id
-                `, [this.firstname, this.lastname, this.phone, this.email, this.experience, this.datestarted, this.adminstatus, this.course_id, this.password]);
+                `, [this.fullname, this.phone, this.email, this.experience, this.datestarted, this.adminstatus, this.course_id, this.password]);
             console.log('employee was created with id:', response.id);
             return response;
         } catch (err) {
@@ -70,7 +69,7 @@ class Employee {
     async getUserInfo() {
         try {
             const userData = await db.one(`
-            select id, firstname, lastname, phone, email, experience, datestarted, adminstatus, course_id, password
+            select id, fullname, phone, email, experience, datestarted, adminstatus, course_id, password
                 from users
             where id = $1`, 
             [this.id]);
@@ -84,7 +83,7 @@ class Employee {
         try {
             const employeeData = await db.one(
             `
-                select id, firstname, lastname, phone, experience, datestarted, adminstatus, course_id, password
+                select id, fullname, phone, experience, datestarted, adminstatus, course_id, password
                     from employee
                 where email = $1`,
             [this.email]
@@ -111,12 +110,11 @@ class Employee {
 
     
 
-    static async updateEmployee(employeeId, firstname, lastname, phone, email,  experience, datestarted, course_id, password) {
+    static async updateEmployee(employeeId, fullname, phone, email,  experience, datestarted, course_id, password) {
         const query = `
             UPDATE employee 
             SET 
-                firstname = '${firstname}', 
-                lastname = '${lastname}', 
+                fullname = '${fullname}', 
                 phone = '${phone}', 
                 email = '${email}', 
                 experience = '${experience}', 
