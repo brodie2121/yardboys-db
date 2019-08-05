@@ -40,7 +40,7 @@ router.get("/delete/:employee_id?", async (req, res, next) => {
 router.post("/login", async (req, res) => {
     console.log("this is req body", req.body);
     const { email, password } = req.body,
-        employeeInstance = new Employee(null, null, null, null, email, password, null, null, null, null);
+        employeeInstance = new Employee(null, null, null, email, password, null, null, null, null);
     const employeeData = await employeeInstance.getEmployeeByEmail();
     console.log("this is employee data: ", employeeData);
 
@@ -94,9 +94,9 @@ router.post("/login", async (req, res) => {
 router.put("/employees/update/:employee_id?", async (req, res) => {
     const employeeId = req.params.employee_id;
     console.log(req.body);
-    const { fullname, phone, email, experience, datestarted, course_id, password } = req.body;
-    const response = await EmployeeModel.updateEmployee(employeeId, fullname, phone, email, experience, datestarted, adminstatus, course_id, password);
-    console.log("response is", response)
+    const { fullname, phone, email, experience, datestarted, course_id } = req.body;
+    const response = await EmployeeModel.updateEmployee(employeeId, fullname, phone, email, experience, datestarted, adminstatus, course_id);
+    console.log("EmployeeModel", EmployeeModel)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
     } else {

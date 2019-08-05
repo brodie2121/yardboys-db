@@ -1,5 +1,4 @@
 const db = require('./conn.js');
-const bcrypt = require('bcryptjs');
 
 class Employee {
     constructor(id, fullname, phone, email, experience, datestarted, adminstatus, course_id, password) {
@@ -29,7 +28,7 @@ class Employee {
                 `insert into employee
                     (fullname, phone, email, experience, datestarted, adminstatus, course_id, password)
                 values
-                    ($1, $2, $3, $4, $5, $6, $7, $8)
+                    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 returning id
                 `, [this.fullname, this.phone, this.email, this.experience, this.datestarted, this.adminstatus, this.course_id, this.password]);
             console.log('employee was created with id:', response.id);
@@ -107,10 +106,7 @@ class Employee {
         }
     }
 
-
-    
-
-    static async updateEmployee(employeeId, fullname, phone, email,  experience, datestarted, course_id, password) {
+    static async updateEmployee(employeeId, fullname, phone, email,  experience, datestarted, course_id) {
         const query = `
             UPDATE employee 
             SET 
@@ -120,9 +116,7 @@ class Employee {
                 experience = '${experience}', 
                 datestarted = '${datestarted}',
                 adminstatus = '${adminstatus}',
-                course_id = '${course_id}',
-                password = '${password}'
-
+                course_id = '${course_id}'
             WHERE 
                 id = '${employeeId}'`;
         console.log(query);
