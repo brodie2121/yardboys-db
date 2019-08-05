@@ -96,7 +96,7 @@ router.put("/employees/update/:employee_id?", async (req, res) => {
     console.log(req.body);
     const { fullname, phone, email, experience, datestarted, course_id } = req.body;
     const response = await EmployeeModel.updateEmployee(employeeId, fullname, phone, email, experience, datestarted, adminstatus, course_id);
-    console.log("EmployeeModel", EmployeeModel)
+    console.log("response is", response)
     if (response.command === "UPDATE" && response.rowCount >= 1) {
         res.sendStatus(200);
     } else {
