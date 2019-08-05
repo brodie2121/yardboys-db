@@ -106,7 +106,7 @@ class Employee {
         }
     }
 
-    static async updateEmployee(employeeId, fullname, phone, email,  experience, datestarted, course_id) {
+    static async updateEmployee(employeeId, fullname, phone, email, experience, datestarted, course_id) {
         const query = `
             UPDATE employee 
             SET 
@@ -115,7 +115,6 @@ class Employee {
                 email = '${email}', 
                 experience = '${experience}', 
                 datestarted = ${datestarted},
-                adminstatus = '${adminstatus}',
                 course_id = '${course_id}'
             WHERE 
                 id = '${employeeId}'`;
