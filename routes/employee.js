@@ -53,6 +53,7 @@ router.post("/login", async (req, res) => {
         req.session.employee_id = employeeData.employee_id;
         employeeData["login"] = true;
         console.log("CORRECT PW!");
+        res.json(employeeData);
         res.sendStatus(200);
     } else {
         console.log("WRONG PW!");
