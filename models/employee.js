@@ -116,7 +116,7 @@ class Employee {
                 experience = '${experience}', 
                 datestarted = ${datestarted},
                 adminstatus = '${adminstatus}',
-                course_id = ${course_id}
+                course_id = '${course_id}'
             WHERE 
                 id = '${employeeId}'`;
         console.log(query);

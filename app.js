@@ -9,8 +9,8 @@ const express = require('express');
 
 const indexRouter = require('./routes/index');
     usersRouter = require('./routes/users');
-    JobBoardRouter = require('./routes/JobBoard');
-    employeeRouter = require('./routes/employee');
+    JobBoardRouter = require('./routes/jobBoard');
+    EmployeeRouter = require('./routes/employee');
     sprayChartRouter = require('./routes/sprayChart');
     JobTypeRouter = require('./routes/jobType');
     YourCourseRouter = require('./routes/yourCourse');
@@ -42,7 +42,7 @@ app.use(session({
 }));
 
 app.use('/jobboard', JobBoardRouter);
-app.use('/employee', employeeRouter);
+app.use('/employee', EmployeeRouter);
 app.use('/spraychart', sprayChartRouter);
 app.use('/jobtype', JobTypeRouter);
 app.use('/yourcourse', YourCourseRouter);
