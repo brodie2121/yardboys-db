@@ -1,48 +1,48 @@
-create table employee(
-    id serial primary key,
-    firstname VARCHAR(100),
-    lastname VARCHAR(100),
-    phone VARCHAR(100),
-    email VARCHAR(100),
-    experience VARCHAR(100),
-    datestarted VARCHAR(100),
-    adminstatus VARCHAR(100),
-    course_id INTEGER REFERENCES yourclub(id)
+CREATE TABLE employee (
+    id SERIAL PRIMARY KEY,
+    fullname character varying(100),
+    phone character varying(200),
+    email character varying(100),
+    experience character varying(100),
+    datestarted character varying(100),
+    adminstatus character varying(100),
+    course_id integer REFERENCES yourcourse(id),
+    password character varying(500)
 );
 
-create table sprayChart(
-    id serial primary key,
-    dateApplied varchar(100),
-    employee_id integer references employee(id),
-    holesTreated varchar(1000),
-    lengthOfCutTreated varchar(1000),
-    chemicalsBeingUsed text,
-    rateApplied varchar(100),
-    gallonsPerTank varchar(100),
-    sprayRig varchar(1000),
-    pestOrDiseaseControlled varchar(1000)
+CREATE TABLE spraychart (
+    id SERIAL PRIMARY KEY,
+    dateapplied character varying(100),
+    employee_id integer REFERENCES employee(id),
+    holestreated character varying(1000),
+    lengthofcuttreated character varying(1000),
+    chemicalsbeingused text,
+    rateapplied character varying(100),
+    totalgallons character varying(100),
+    sprayrig character varying(1000),
+    pestordiseasecontrolled character varying(1000)
 );
 
-create table yourclub(
-    id serial primary key,
-    clubname VARCHAR(200),
-    admin VARCHAR(100),
-    employees VARCHAR(200),
-    city VARCHAR(200),
-state VARCHAR(200)
+CREATE TABLE yourcourse (
+    id SERIAL PRIMARY KEY,
+    clubname character varying(200),
+    admin character varying(100),
+    employees character varying(200),
+    city character varying(200),
+    state character varying(200)
 );
 
-create table jobboard(
-    id serial primary key,
-    date VARCHAR(100),
-    jobtype INTEGER REFERENCES jobtype(id),
-    employee INTEGER REFERENCES employee(id),
-    comments text
+CREATE TABLE jobboard (
+    id SERIAL PRIMARY KEY,
+    jobtype integer REFERENCES jobtype(id),
+    employee integer REFERENCES employee(id),
+    comments text,
+    date character varying(100)
+);
+CREATE TABLE jobtype (
+    id SERIAL PRIMARY KEY,
+    job character varying(200),
+    instructions character varying(200)
 );
 
-create table jobtype(
-    id serial primary key,
-    jobtype VARCHAR(200),
-    instructions VARCHAR(200)
-);
 
